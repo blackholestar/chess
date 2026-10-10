@@ -1,0 +1,34 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    {
+      "severity": "minor",
+      "blocking": false,
+      "confidence": "confirmed",
+      "title": "En passant square set unconditionally",
+      "detail": "nextEnPassant sets enPassant after every double push even with no adjacent enemy pawn (follows plan Decision 11). Legality is unaffected because pawnTargets re-validates the victim pawn. Before adding threefold repetition, either set it only when a capture is possible or normalize it when comparing positions."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "confidence": "confirmed",
+      "title": "Promotion choice is the caller's job",
+      "detail": "getLegalMoves returns Coord[], so the four promotion moves must be expanded by the client/gameManager (prompt for N/B/R/Q); otherwise the move defaults to queen. By design; note for the client work."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "confidence": "confirmed",
+      "title": "getGameState overwrites END",
+      "detail": "The state is derived only from the position and never returns END, so recomputing it on a resigned game loses END. gameManager should keep END rather than call getGameState again on a finished game."
+    }
+  ],
+  "perft": {
+    "Start": [20, 400, 8902, 197281],
+    "Kiwipete": [48, 2039, 97862],
+    "Position 3": [14, 191, 2812],
+    "allMatch": true
+  },
+  "typecheck": "narrow tsc spot-check exit 0 (coder's evidence was not available in this step's inputs)",
+  "reviewDoc": "/Users/ethan/Projects/chess/.agents/tasks/review.md"
+}
