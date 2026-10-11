@@ -4,10 +4,10 @@ export async function GET(
     _request: Request,
     { params }: { params: Promise<{ gameId: string }> }
 ) {
-    // returns only Game, not StoredGame
+    // returns full StoredGame (needed to determine version)
     try {
         const { gameId } = await params;
-        const response = (await gameManager.loadGame(gameId)).game;
+        const response = (await gameManager.loadGame(gameId));
         return Response.json({
             success: true,
             game: response,

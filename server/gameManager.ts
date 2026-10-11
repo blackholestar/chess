@@ -1,6 +1,8 @@
 import type { Move, Game, StoredGame } from '../shared/types';
 import { supabase } from './supabase';
 import { initialGameState } from './data';
+import { getLegalMoves, makeMove } from '@/shared/rules';
+import { canNewFetchStrategyProvideMoreContent } from 'next/dist/client/components/segment-cache/cache';
 
 class GameManager {
     constructor() {
@@ -68,10 +70,22 @@ class GameManager {
         }
     }
 
-    async move(move: Move): Promise<StoredGame> {
+    async move(gameId: string, move: Move): Promise<StoredGame> {
         // TODO: query databaes, check legality of move, make move, and update client and database
-        throw new Error("not implemented");
+        const curGame = await this.loadGame(gameId);
+        const newGame = makeMove(curGame.game, move);
+
+        const returnedGame: StoredGame = {
+            ...curGame,
+            game: newGame
+        };
+        
+        await this.saveGame(returnedGame);
+        return returnedGame;
+
     }
+
+    
 }
 
 const gameManager = new GameManager();

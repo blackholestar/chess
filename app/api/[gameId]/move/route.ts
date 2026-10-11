@@ -1,14 +1,15 @@
 import {gameManager} from "@/server/gameManager";
 import { Move } from "@/shared/types";
 
-export async function GET(
-    _request: Request,
-    { params }: { params: Promise<{ move: Move }> }
+export async function POST(
+    request: Request,
+    { params }: { params: Promise<{ gameId: string }> }
 ) {
-    
+    // makes move and returns storedGame
     try {
-        const { move } = await params;
-        const response = (await gameManager.move(move)).game;
+        const { gameId } = await params;
+        const { move } = await request.json();
+        const response = (await gameManager.move(gameId, move));
         return Response.json({
             success: true,
             game: response,

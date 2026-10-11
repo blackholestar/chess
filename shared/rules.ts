@@ -540,6 +540,7 @@ export function isLegalMove(game: Game, move: Move): boolean {
 /**
  * Returns a new Game with `move` played: board, turn, history (normalized move,
  * promotion filled in, default "Q"), castling rights, en passant square and state.
+ * Also includes getGameState.
  * Throws Error("Illegal move") if `isLegalMove` is false. `game` is not modified.
  */
 export function makeMove(game: Game, move: Move): Game {
