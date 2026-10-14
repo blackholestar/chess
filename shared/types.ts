@@ -18,6 +18,11 @@ export type Square =
     piece: null,
 }
 
+export type BoardSquare = {
+    coord: Coord,
+    square: Square
+}
+
 export type Move = {
     color: Color,
     startSq: Coord,
@@ -49,3 +54,7 @@ export type StoredGame = {
     game: Game,
     version: number
 }
+
+export type ApiResult<T> = 
+| {success: true, data: T}
+| {success: false, error: string};

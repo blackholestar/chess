@@ -2,18 +2,17 @@ import type { Move, Game, StoredGame } from '../shared/types';
 import { supabase } from './supabase';
 import { initialGameState } from './data';
 import { getLegalMoves, makeMove } from '@/shared/rules';
-import { canNewFetchStrategyProvideMoreContent } from 'next/dist/client/components/segment-cache/cache';
 
 class GameManager {
     constructor() {
 
     }
 
-    async createGame(): Promise<number> {
+    async createGame(): Promise<string> {
         // create new game: returns game id of created game
         while (true) {
-            const id = Math.floor(Math.random() * (99999 - 10000) + 10000);
-            const game = initialGameState;
+            const id = String(Math.floor(Math.random() * (100000 - 10000) + 10000));
+            const game = structuredClone(initialGameState);
             const { error } = await supabase
                 .from("Game")
                 .insert({
@@ -62,7 +61,7 @@ class GameManager {
             .eq("version", storedGame.version)
             .select("id");
         if (error) {
-            throw new Error("Failed to save game");
+            throw new Error(error.message);
         }
 
         if (data === null || data.length === 0) {
@@ -85,6 +84,25 @@ class GameManager {
 
     }
 
+    async resetGame(gameId: string): Promise<StoredGame> {
+        const newGame = {id: gameId, version: 0, game: structuredClone(initialGameState)};
+        const {data, error} = await supabase
+            .from("Game")
+            .update({
+                version: 0,
+                game: newGame.game
+            })
+            .eq("id", gameId)
+            .select("id");
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        if (data === null || data.length === 0) {
+            throw new Error;
+        }
+        return newGame;
+    }
     
 }
 
